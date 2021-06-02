@@ -5,12 +5,12 @@ Addon for WoW Classic/TBC Classic to assist during skilling up of gathering prof
 
 This is an update to [https://github.com/TonyRaccoon/GatherNotify](https://github.com/TonyRaccoon/GatherNotify).
 
-# San's Updates
+## San's Updates
 * Added creatures and nodes for The Burning Crusade Classic.
 * Added minimap tooltip support. *This one is a tad touchy... if there are multiple entities in the same region of the mining or herbing node, it won't update the tooltip. Or if you move from one node to another without the tooltip disappearing, it won't update the tooltip properly.*
 * Updated the slashcommand from gn to sgn.
 
-**From the GatherNotify/README.md:**
+## From the GatherNotify/README.md:
 ```Now WoW Classic compatible!
 
 GatherNotify adds the following improvements to the gathering profession leveling experience:

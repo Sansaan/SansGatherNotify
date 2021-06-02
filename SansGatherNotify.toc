@@ -1,0 +1,11 @@
+## Interface: 20501
+## Title: SansGatherNotify
+## Notes: Adds required/current profession level to herb/mineral/skinning tooltips, notifies you when you can pick, mine, or skin something new, and improves "Requires <skill> <level>" errors
+## Author: Foxthorn, edits by Sansaan
+## Version: 3.3
+## X-Date: May 20, 2021
+
+SansGatherNotify.lua
+Data\Herbalism.lua
+Data\Mining.lua
+Data\Skinning.lua

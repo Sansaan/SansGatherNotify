@@ -10,6 +10,9 @@ This is an update to [https://github.com/TonyRaccoon/GatherNotify](https://githu
 * Added minimap tooltip support. *This one is a tad touchy... if there are multiple entities in the same region of the mining or herbing node, it won't update the tooltip. Or if you move from one node to another without the tooltip disappearing, it won't update the tooltip properly.*
 * Updated the slashcommand from gn to sgn.
 
+CurseForge: [http://curseforge.com/wow/addons/sansgathernotify](http://curseforge.com/wow/addons/sansgathernotify)  
+GitHub: [https://github.com/Sansaan/SansGatherNotify](https://github.com/Sansaan/SansGatherNotify)
+
 ## From the GatherNotify/README.md:
 > Now WoW Classic compatible!
 > 

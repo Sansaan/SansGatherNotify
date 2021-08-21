@@ -35,6 +35,7 @@ SansGatherNotify.levels.herbalism = {
   {315, nil, "Dreaming Glory", 2},
   {325, nil, "Ragveil", 2},
   {325, nil, "Terocone", 2},
+  {335, nil, "Flame Cap", 2},
   {340, nil, "Ancient Lichen", 2},
   {350, nil, "Netherbloom", 2},
   {365, nil, "Nightmare Vine", 2},

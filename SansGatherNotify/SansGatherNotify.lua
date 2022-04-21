@@ -229,7 +229,7 @@ function SansGatherNotify.GetHighestNode(skill,level)
 end
 
 function SansGatherNotify.PrintHighestNode(skill,argtemp)
-  -- Print the highest herb/mine/corpse usable at the current skill level
+  -- Print the highest herb/mine/corpse usable at the current skill level, with bonuses
 
   local level,temp = SansGatherNotify.GetProfessionLevel(skill)
   temp = tonumber(argtemp) or temp
@@ -241,11 +241,9 @@ function SansGatherNotify.PrintHighestNode(skill,argtemp)
     if withoutbonuses == withbonuses then
       SansGatherNotify.Msg(firstToUpper(skill).." "..level..": "..withoutbonuses.." (regardless of |cff1aff1a+"..temp.."|cffFFC300 bonus)", true)
     else
-      local tempmsg = ""
+      local tempmsg = " (without any bonuses)"
       if temp>0 then
         tempmsg = " (without current |cff1aff1a+"..temp.."|cffFFC300 bonus)"
-      else
-        tempmsg = " (without any bonuses)"
       end
       
       if skill == "skinning" then

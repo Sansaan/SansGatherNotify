@@ -29,34 +29,53 @@ function SansGatherNotify.OnEvent(self, event, ...)
   end
 end
 
+local function split(str, pat, limit)
+  local t = {}
+  local fpat = "(.-)" .. pat
+  local last_end = 1
+  local s, e, cap = str:find(fpat, 1)
+  while s do
+    if s ~= 1 or cap ~= "" then
+      table.insert(t, cap)
+    end
+    last_end = e+1
+    s, e, cap = str:find(fpat, last_end)
+
+    if limit ~= nil and limit <= #t then
+      break
+    end
+  end
+  if last_end <= #str then
+    cap = str:sub(last_end)
+    table.insert(t, cap)
+  end
+  return t
+end
+
 function SansGatherNotify.OnCommand(cmd)
   -- Fired when a slash command is entered
   cmd = cmd:lower()
   
   if #cmd > 0 then
-    for i = 0,8 do
-      if cmd == string.sub("skinning", 1,-i-1) then
-        SansGatherNotify.PrintHighestNode("skinning")
-        return
-      
-      elseif cmd ==string.sub("mining", 1,-i-1) then
-        SansGatherNotify.PrintHighestNode("mining")
-        return
-      
-      elseif cmd == string.sub("herbalism", 1,-i-1) then
-        SansGatherNotify.PrintHighestNode("herbalism")
-        return
-      
-      elseif cmd == string.sub("version", 1,-i-1) then
-        SansGatherNotify.Msg(format("SansGatherNotify version: |cff1aff1a%s|cffFFC300 (%s)", GetAddOnMetadata("SansGatherNotify","Version"), GetAddOnMetadata("SansGatherNotify","X-Date")), true)
-        return
-      end
+    args = split(cmd, " ")
+    if string.find("skinning", args[1]) then
+      SansGatherNotify.PrintHighestNode("skinning",args[2])
+      return
+    elseif string.find("mining", args[1]) or string.find("mine", args[1]) then
+      SansGatherNotify.PrintHighestNode("mining",args[2])
+      return
+    elseif string.find("herbalism", args[1]) or string.find("herbing", args[1]) then
+      SansGatherNotify.PrintHighestNode("herbalism",args[2])
+      return
+    elseif string.find("version", args[1]) then
+      SansGatherNotify.Msg(format("SansGatherNotify version: |cff1aff1a%s|cffFFC300 (%s)", GetAddOnMetadata("SansGatherNotify","Version"), GetAddOnMetadata("SansGatherNotify","X-Date")), true)
+      return
     end
   end
   
-  SansGatherNotify.Msg("/sgn skinning - Print highest level creature you can skin", true)
-  SansGatherNotify.Msg("/sgn mining - Print highest node you can mine", true)
-  SansGatherNotify.Msg("/sgn herbalism - Print highest herb you can pick", true)
+  SansGatherNotify.Msg("/sgn skinning [bonus] - Print highest level creature you can skin", true)
+  SansGatherNotify.Msg("/sgn mining [bonus] - Print highest node you can mine", true)
+  SansGatherNotify.Msg("/sgn herbalism [bonus] - Print highest herb you can pick", true)
   SansGatherNotify.Msg("/sgn version - Prints addon version", true)
 end
 
@@ -205,15 +224,19 @@ function SansGatherNotify.GetHighestNode(skill,level)
   return SansGatherNotify.GetAllGatherable(skill,highest)
 end
 
-function SansGatherNotify.PrintHighestNode(skill)
+function SansGatherNotify.PrintHighestNode(skill,argtemp)
   -- Print the highest herb/mine/corpse usable at the current skill level
+
   local level,temp = SansGatherNotify.GetProfessionLevel(skill)
+  temp = tonumber(argtemp) or temp
 
   if level then
     ----- First, print highest mineable without taking temp bonuses into account -----
     local tempmsg = ""
-    if temp>0 and SansGatherNotify.GetHighestNode(skill,level+temp) ~= SansGatherNotify.GetHighestNode(skill,level) then
+    if temp>0 then
       tempmsg = " (without current |cff1aff1a+"..temp.."|cffFFC300 bonus)"
+    else
+      tempmsg = " (without any bonuses)"
     end
     
     if skill == "skinning" then
@@ -227,11 +250,10 @@ function SansGatherNotify.PrintHighestNode(skill)
       SansGatherNotify.Msg("Herbalism "..level..": "..SansGatherNotify.GetHighestNode("herbalism",level)..tempmsg, true)
     end
     ----- End -----
-    
+
     ----- Then print highest mineable, taking temp bonuses into account -----
-    if SansGatherNotify.GetHighestNode(skill,level+temp) ~= SansGatherNotify.GetHighestNode(skill,level) then -- Only print what you can mine with current bonus if it differs from without bonus
-      tempmsg = ""
-      if temp>0 then tempmsg = " (with current |cff1aff1a+"..temp.."|cffFFC300 bonus)" end
+    if temp>0 then 
+      tempmsg = " (with current |cff1aff1a+"..temp.."|cffFFC300 bonus)"
       if skill == "skinning" then SansGatherNotify.Msg("Skinning |cff1aff1a"..level+temp.."|cffFFC300: level "..SansGatherNotify.GetHighestNode("skinning",level+temp).." creatures"..tempmsg, true) end
       if skill == "mining" then SansGatherNotify.Msg("Mining |cff1aff1a"..level+temp.."|cffFFC300: "..SansGatherNotify.GetHighestNode("mining",level+temp)..tempmsg, true) end
       if skill == "herbalism" then SansGatherNotify.Msg("Herbalism |cff1aff1a"..level+temp.."|cffFFC300: "..SansGatherNotify.GetHighestNode("herbalism",level+temp)..tempmsg, true) end

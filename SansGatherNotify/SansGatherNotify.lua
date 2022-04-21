@@ -52,6 +52,10 @@ local function split(str, pat, limit)
   return t
 end
 
+local function firstToUpper(str)
+  return (str:gsub("^%l", string.upper))
+end
+
 function SansGatherNotify.OnCommand(cmd)
   -- Fired when a slash command is entered
   cmd = cmd:lower()
@@ -231,34 +235,30 @@ function SansGatherNotify.PrintHighestNode(skill,argtemp)
   temp = tonumber(argtemp) or temp
 
   if level then
-    ----- First, print highest mineable without taking temp bonuses into account -----
-    local tempmsg = ""
-    if temp>0 then
-      tempmsg = " (without current |cff1aff1a+"..temp.."|cffFFC300 bonus)"
-    else
-      tempmsg = " (without any bonuses)"
-    end
-    
-    if skill == "skinning" then
-      local highestlevel = SansGatherNotify.GetHighestNode("skinning",level) or "???"
-      SansGatherNotify.Msg("Skinning "..level..": level "..highestlevel.." creatures"..tempmsg,true)
-    end
-    if skill == "mining" then
-      SansGatherNotify.Msg("Mining "..level..": "..SansGatherNotify.GetHighestNode("mining",level)..tempmsg, true)
-    end
-    if skill == "herbalism" then
-      SansGatherNotify.Msg("Herbalism "..level..": "..SansGatherNotify.GetHighestNode("herbalism",level)..tempmsg, true)
-    end
-    ----- End -----
+    local withoutbonuses = SansGatherNotify.GetHighestNode(skill,level) or "???"
+    local withbonuses = SansGatherNotify.GetHighestNode(skill,level+temp) or "???"
 
-    ----- Then print highest mineable, taking temp bonuses into account -----
-    if temp>0 then 
-      tempmsg = " (with current |cff1aff1a+"..temp.."|cffFFC300 bonus)"
-      if skill == "skinning" then SansGatherNotify.Msg("Skinning |cff1aff1a"..level+temp.."|cffFFC300: level "..SansGatherNotify.GetHighestNode("skinning",level+temp).." creatures"..tempmsg, true) end
-      if skill == "mining" then SansGatherNotify.Msg("Mining |cff1aff1a"..level+temp.."|cffFFC300: "..SansGatherNotify.GetHighestNode("mining",level+temp)..tempmsg, true) end
-      if skill == "herbalism" then SansGatherNotify.Msg("Herbalism |cff1aff1a"..level+temp.."|cffFFC300: "..SansGatherNotify.GetHighestNode("herbalism",level+temp)..tempmsg, true) end
+    if withoutbonuses == withbonuses then
+      SansGatherNotify.Msg(firstToUpper(skill).." "..level..": "..withoutbonuses.." (regardless of |cff1aff1a+"..temp.."|cffFFC300 bonus)", true)
+    else
+      local tempmsg = ""
+      if temp>0 then
+        tempmsg = " (without current |cff1aff1a+"..temp.."|cffFFC300 bonus)"
+      else
+        tempmsg = " (without any bonuses)"
+      end
+      
+      if skill == "skinning" then
+        withoutbonuses = "level "..withoutbonuses.." creatures"
+        withbonuses = "level "..withbonuses.." creatures"
+      end
+      SansGatherNotify.Msg(firstToUpper(skill).." "..level..": "..withoutbonuses..tempmsg, true)
+
+      if temp>0 then
+        tempmsg = " (with current |cff1aff1a+"..temp.."|cffFFC300 bonus)"
+        SansGatherNotify.Msg(firstToUpper(skill).." |cff1aff1a"..level+temp.."|cffFFC300: "..withbonuses..tempmsg, true)
+      end
     end
-    ----- End -----
   else
     SansGatherNotify.Msg("You don't have "..skill, true)
   end

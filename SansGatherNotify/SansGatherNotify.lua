@@ -114,7 +114,7 @@ function SansGatherNotify.OnSkillUpMessage(self, msg)
   
   if new then
     local newmessage = ""
-    local tempmsg = ""
+    local tempmsg = " (without any bonuses)"
     
     if skill == "Skinning" then
       newmessage = "Now able to skin level "..new.." creatures"

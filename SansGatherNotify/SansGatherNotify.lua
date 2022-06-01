@@ -59,9 +59,9 @@ end
 function SansGatherNotify.OnCommand(cmd)
   -- Fired when a slash command is entered
   cmd = cmd:lower()
-  
+
   if #cmd > 0 then
-    args = split(cmd, " ")
+    local args = split(cmd, " ")
     if string.find("skinning", args[1]) then
       SansGatherNotify.PrintHighestNode("skinning",args[2])
       return
@@ -76,7 +76,7 @@ function SansGatherNotify.OnCommand(cmd)
       return
     end
   end
-  
+
   SansGatherNotify.Msg("/sgn skinning [bonus] - Print highest level creature you can skin", true)
   SansGatherNotify.Msg("/sgn mining [bonus] - Print highest node you can mine", true)
   SansGatherNotify.Msg("/sgn herbalism [bonus] - Print highest herb you can pick", true)
@@ -87,7 +87,7 @@ function SansGatherNotify.OnUIError(self, event, errtype, err)
   -- Fired when a red error is shown at the top of the screen
   local skill = strmatch(err,"Requires (.*) ")
   local rlevel = tonumber(strmatch(err,"Requires .* (%d+)"))
-  
+
   if skill and rlevel then -- Error was a "requires" error
     local level,temp = SansGatherNotify.GetProfessionLevel(skill)
     if level then
@@ -104,18 +104,18 @@ function SansGatherNotify.OnSkillUpMessage(self, msg)
   -- Fired when we get a "Your skill in x has increased to y." message
   local skill = strmatch(msg, "Your skill in (%a*) has increased to")
   if skill ~= "Mining" and skill ~= "Herbalism" and skill ~= "Skinning" then return end
-  
+
   local level,temp = SansGatherNotify.GetProfessionLevel(skill)
   local skillcolor = SansGatherNotify.GetChatColor("SKILL")
-  
+
   ----- First, print if you can mine something new, without taking temp bonuses into account -----
   local new = SansGatherNotify.GetAllGatherable(skill,level)
   local newtemp = SansGatherNotify.GetAllGatherable(skill,level+temp)
-  
+
   if new then
     local newmessage = ""
     local tempmsg = " (without any bonuses)"
-    
+
     if skill == "Skinning" then
       newmessage = "Now able to skin level "..new.." creatures"
 
@@ -126,10 +126,10 @@ function SansGatherNotify.OnSkillUpMessage(self, msg)
       newmessage = "Now able to pick "..new
 
     end
-    
+
     if newtemp and newtemp ~= new then
       tempmsg = " ("
-      
+
       if skill == "Skinning" then tempmsg = tempmsg.."level "..newtemp.." creatures"
       elseif skill == "Mining" then tempmsg = tempmsg..newtemp.." ("..level..")"
       elseif skill == "Herbalism" then tempmsg = tempmsg..newtemp.." ("..level..")"
@@ -137,7 +137,7 @@ function SansGatherNotify.OnSkillUpMessage(self, msg)
 
       tempmsg = tempmsg.." with current |cff1aff1a+"..temp.."|cffFFC300 bonus)"
     end
-    
+
     SansGatherNotify.Msg(newmessage..tempmsg, false)
 
   end
@@ -161,7 +161,7 @@ function SansGatherNotify.UpdateActive()
       SansGatherNotify.ActiveTracking = ""
 
     end
-    
+
   elseif SansGatherNotify.ClientVersion == 2 then
     -- TBC
 
@@ -190,7 +190,7 @@ function SansGatherNotify.Msg(msg, printname, color)
   if not color then
     color = "FFC300"
   end
-  
+
   if printname then
     DEFAULT_CHAT_FRAME:AddMessage("|cffd2b48c[San's GatherNotify]|r |cff"..color..msg)
   else
@@ -217,7 +217,7 @@ function SansGatherNotify.GetHighestNode(skill,level)
   -- Get the highest herb/mine/corpse usable at the current skill level
   skill = skill:lower()
   if skill ~= "skinning" and skill ~= "herbalism" and skill ~= "mining" then return end
-  
+
   local highest = 1
   for i,v in pairs(SansGatherNotify.levels[skill]) do
     if v[#v] <= SansGatherNotify.ClientVersion and v[1] <= level and v[2] then
@@ -245,7 +245,7 @@ function SansGatherNotify.PrintHighestNode(skill,argtemp)
       if temp>0 then
         tempmsg = " (without current |cff1aff1a+"..temp.."|cffFFC300 bonus)"
       end
-      
+
       if skill == "skinning" then
         withoutbonuses = "level "..withoutbonuses.." creatures"
         withbonuses = "level "..withbonuses.." creatures"
@@ -266,7 +266,7 @@ function SansGatherNotify.GetAllGatherable(skill,level)
   -- Get a list of all herbs/mines/corpses usable at the current skill level
   skill = skill:lower()
   if skill ~= "skinning" and skill ~= "herbalism" and skill ~= "mining" then return end
-  
+
   local i2 = 1
   local ret = {}
   for i,v in pairs(SansGatherNotify.levels[skill]) do
@@ -275,7 +275,7 @@ function SansGatherNotify.GetAllGatherable(skill,level)
       i2=i2+1
     end
   end
-  
+
   if #ret == 0 then return nil else return table.concat(ret,", ") end
 end
 
@@ -285,20 +285,20 @@ function SansGatherNotify.GetRequiredLevel(skill,name)
   skill = skill:lower()
   if skill ~= "skinning" and skill ~= "herbalism" and skill ~= "mining" then return end
 
-  ret = 0
-  
+  local ret = 0
+
   for i,v in pairs(SansGatherNotify.levels[skill]) do
     if v[#v] <= SansGatherNotify.ClientVersion and (v[2] == name or v[3] == name) then
       ret = v[1]
     end
   end
-  
+
   return ret
 end
 
 function SansGatherNotify.GetProfessionLevel(name)
   -- Get a profession's level
-  local numSkills = GetNumSkillLines();
+  local numSkills = GetNumSkillLines()
   for i=1, numSkills do
     local skillname,_,_,skillrank,_,skillmodifier = GetSkillLineInfo(i)
     if skillname:lower() == name:lower() then
@@ -323,10 +323,10 @@ end
 
 function SansGatherNotify.ModifyTooltip(self, ...)
   -- Modify an herb's/mine's/corpse's tooltip
-  local skillname,objname,r,g,b,a
-  
+  local skillname,objname,r,g,b,a,linenum,reqlevel
+
   SansGatherNotify.UpdateActive()
-  
+
   if GameTooltipTextLeft2:GetText() == "Mining" then
     skillname = "Mining"
     objname = GameTooltipTextLeft1:GetText()
@@ -357,7 +357,7 @@ function SansGatherNotify.ModifyTooltip(self, ...)
     if reqlevel == nil then
       return
     end
-    
+
     if reqlevel > 0 then
       skillname = SansGatherNotify.ActiveTracking
       --objname = GameTooltipTextLeft1:GetText()
@@ -369,18 +369,18 @@ function SansGatherNotify.ModifyTooltip(self, ...)
       return -- Not a tooltip we care about
     end
   end
-  
+
   -- Modify the tooltip
   local req = SansGatherNotify.GetRequiredLevel(skillname,objname)
-  
+
   if not req then
     return
   end
-  
+
   local newstr = _G["GameTooltipTextLeft"..linenum]:GetText() .. " " .. req
-  
+
   local skill,tempboost = SansGatherNotify.GetProfessionLevel(skillname)
-  
+
   if skill then
     if tempboost > 0 then
       newstr = newstr .. format(" (currently %s|cff1aff1a+%s|r)", skill, tempboost)
@@ -388,7 +388,7 @@ function SansGatherNotify.ModifyTooltip(self, ...)
       newstr = newstr .. " (currently "..skill .. ")"
     end
   end
-  
+
   _G["GameTooltipTextLeft"..linenum]:SetText(newstr)
   GameTooltip:Show() -- Re-show the tooltip to update its size
 end

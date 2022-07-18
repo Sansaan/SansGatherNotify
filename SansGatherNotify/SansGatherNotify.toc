@@ -1,0 +1,6 @@
+## Interface: 00000
+## Title: SansGatherNotify UNSUPPORTED GAME CLIENT
+## Notes: SansGatherNotify is only supported on Classic, TBC Classic, and Wrath Classic
+## Author: Foxthorn, edits by Sansaan
+
+SansGatherNotify-Unsupported.lua

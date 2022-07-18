@@ -26,4 +26,9 @@ SansGatherNotify.levels.mining = {
   {325, "Adamantite",      "Adamantite Deposit", 2},
   {350, "Rich Adamantite", "Rich Adamantite Deposit", 2},
   {375, "Khorium",         "Khorium Vein", 2},
+  {350, "Cobalt",          "Cobalt Deposit", 3},
+  {375, "Rich Cobalt",     "Rich Cobalt Deposit", 3},
+  {400, "Saronite",        "Saronite Deposit", 3},
+  {425, "Rich Saronite",   "Rich Saronite Deposit", 3},
+  {450, "Pure Saronite",   "Pure Saronite Deposit", 3},  
 }

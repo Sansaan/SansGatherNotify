@@ -162,8 +162,8 @@ function SansGatherNotify.UpdateActive()
 
     end
 
-  elseif SansGatherNotify.ClientVersion == 2 then
-    -- TBC
+  elseif SansGatherNotify.ClientVersion >= 2 then
+    -- TBC or WOTLK
 
     local count = GetNumTrackingTypes()
     for i=1,count do 

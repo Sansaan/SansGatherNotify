@@ -1,7 +1,7 @@
 SansGatherNotify = {}
 SansGatherNotify.ActiveTracking = ""
 
--- 1 classic, 2 tbc
+-- 1 classic, 2 tbc, 3 wrath
 SansGatherNotify.ClientVersion = tonumber(string.sub((select(4, GetBuildInfo())), 1, 1))
 
 SansGatherNotify.levels = {}

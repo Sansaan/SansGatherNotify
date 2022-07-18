@@ -40,4 +40,11 @@ SansGatherNotify.levels.herbalism = {
   {350, "Netherbloom", "Netherbloom", 2},
   {365, "Nightmare Vine", "Nightmare Vine", 2},
   {375, "Mana Thistle", "Mana Thistle", 2},
+  {375, "Goldclover", "Goldclover", 3},
+  {375, "Tiger Lily", "Tiger Lily", 3},
+  {375, "Adder's Tongue", "Adder's Tongue", 3},
+  {375, "Talandra's Rose", "Talandra's Rose", 3},
+  {375, "Lichbloom", "Lichbloom", 3},
+  {375, "Icethorn", "Icethorn", 3},
+  
 }
